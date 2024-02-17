@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import NoTasksFound from "../components/NoTasksFound";
 import TaskAction from "../components/TaskAction";
 import TaskList from "../components/TaskList";
 import TaskModel from "../components/TaskModel";
@@ -12,7 +13,7 @@ const TaskBoard = () => {
     const [editTask, setEditTask] = useState(null);
     const { userId } = taskData.userInfo;
 
-    const handelAddEditTask = (task, isAdd) => {
+    const handelAddEditTask = (task, isAdd, apiReq) => {
         if (isAdd) {
             const handelCreate = async () => {
 
@@ -36,6 +37,7 @@ const TaskBoard = () => {
         }
 
         else {
+
             setEditTask(task);
 
             const handelUpdate = async () => {
@@ -48,7 +50,9 @@ const TaskBoard = () => {
 
                 const response = await postRequest(url, newTask);
 
+
                 if (response.statusText === "OK") {
+                    console.log(response);
                     setTaskData((prevTaskData) => ({
                         ...prevTaskData,
                         refresh: prevTaskData.refresh + 1
@@ -109,7 +113,7 @@ const TaskBoard = () => {
 
                     <TaskAction onOpen={() => setShowModal(true)} />
 
-                    {taskData.data && <TaskList setShowModal={setShowModal} handelAddEditTask={handelAddEditTask} />}
+                    {taskData.data.length > 0 ? < TaskList setShowModal={setShowModal} handelAddEditTask={handelAddEditTask} /> : <NoTasksFound />}
 
                 </div>
             </div>

@@ -111,7 +111,7 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
                             onClick={() => handelDelete(_id)}
                         >Delete</button>
                         <button className="text-blue-500"
-                            onClick={() => { setShowModal(true); handelAddEditTask(data, false) }}
+                            onClick={() => { setShowModal(true); handelAddEditTask(data, false, false) }}
                         >Edit</button>
                     </div>
                 </td>

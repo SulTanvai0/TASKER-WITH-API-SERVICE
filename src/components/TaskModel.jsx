@@ -173,9 +173,9 @@ const Modal = ({ onSave, onEditObj, onClose, onEditSet }) => {
                     type="submit"
                     className="rounded bg-red-600 px-4 py-2 text-white transition-all hover:opacity-80"
                     onClick={(e) => {
+                        e.preventDefault();
                         onClose()
                         onEditSet()
-                        e.preventDefault();
                     }}
                 >
                     <a href="/">close</a>
