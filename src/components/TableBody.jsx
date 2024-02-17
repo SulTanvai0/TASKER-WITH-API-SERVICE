@@ -33,7 +33,7 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
         const confirm = window.confirm(`sure you want to delete ${title}`);
 
         if (confirm) {
-            const url = ` https://tasker-api-cojx.onrender.com/5689/tasker_api/v1/delete_task`
+            const url = ` https://tasker-api-cojx.onrender.com/tasker_api/v1/delete_task`
             const deleteIfo = { "PostId": ID }
 
             const response = await postRequest(url, deleteIfo);
