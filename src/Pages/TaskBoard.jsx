@@ -13,27 +13,24 @@ const TaskBoard = () => {
     const { userId } = taskData.userInfo;
 
     const handelAddEditTask = (task, isAdd) => {
-
         if (isAdd) {
             const handelCreate = async () => {
 
                 const url = ` https://tasker-api-cojx.onrender.com/tasker_api/v1/create_task`
+
                 let postUserId = { postUserId: userId };
-
-                let newTask = { ...task, ...postUserId }
-
-
+                let newTask = { ...task, ...postUserId };
 
                 const response = await postRequest(url, newTask);
 
+                if (response.data.status == "success") {
 
-                if (response.statusText === "OK") {
+
                     setTaskData((prevTaskData) => ({
                         ...prevTaskData,
                         refresh: prevTaskData.refresh + 1
                     }));
                 }
-
             }
             handelCreate()
         }
@@ -57,7 +54,6 @@ const TaskBoard = () => {
                         refresh: prevTaskData.refresh + 1
                     }));
                 }
-
             }
             handelUpdate();
         }
@@ -75,10 +71,11 @@ const TaskBoard = () => {
                     const response = await postRequest(url, ID);
                     const newData = response?.data?.data;
 
-                    if (newData) {
+
+                    if (newData.length > 0) {
                         setTaskData((prevTaskData) => ({
                             ...prevTaskData,
-                            data: newData,
+                            data: [...newData],
                         }));
                     }
                 } catch (error) {
@@ -88,7 +85,6 @@ const TaskBoard = () => {
 
             fetchData(userID, url);
         }
-
     }, [setTaskData, taskData.api, taskData.refresh, userId]);
 
 
