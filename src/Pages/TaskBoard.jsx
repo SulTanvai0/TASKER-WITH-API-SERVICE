@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 import NoTasksFound from "../components/NoTasksFound";
 import TaskAction from "../components/TaskAction";
 import TaskList from "../components/TaskList";
@@ -16,8 +17,6 @@ const TaskBoard = () => {
     const { userId } = taskData.userInfo;
 
     const handelAddEditTask = (task, isAdd) => {
-
-
         if (isAdd) {
 
             const handelCreate = async () => {
@@ -31,6 +30,7 @@ const TaskBoard = () => {
 
                 if (response.data.status == "success") {
                     setRefresh(refresh + 1)
+                    toast.success(`${task.title} Add Task List`);
                 }
             }
             handelCreate()
@@ -51,7 +51,6 @@ const TaskBoard = () => {
                 const response = await postRequest(url, newTask);
 
                 if (response.data.status == "success") {
-
                     setRefresh(refresh + 1)
                 }
             }
@@ -64,16 +63,18 @@ const TaskBoard = () => {
     useEffect(() => {
         const fetchData = async (ID, url) => {
             try {
-
                 const response = await postRequest(url, ID);
-
                 const newData = response?.data?.data;
 
                 if (newData) {
+
+                    const reversedData = [...newData].reverse();
+
                     setTaskData((prevTaskData) => ({
                         ...prevTaskData,
-                        data: [...newData],
+                        data: reversedData,
                     }));
+
                 }
             } catch (error) {
                 console.error('Error fetching task data:', error);
@@ -86,35 +87,31 @@ const TaskBoard = () => {
         if (userID) {
             fetchData(userID, url);
         }
-
-
     }, [setTaskData, taskData.api, userId, refresh]);
+
 
 
     return (
         <section className="mb-20">
-
             <div className="container">
                 <div className="p-2 flex justify-end">
-
-                </div>
-                <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
-
-                    {
-                        showModal && <TaskModel
+                    {showModal && (
+                        <TaskModel
                             onEditObj={editTask}
                             onSave={handelAddEditTask}
                             onEditSet={() => setEditTask(null)}
                             onClose={() => setShowModal(false)}
                         />
-
-                    }
-
-                    <TaskAction onOpen={() => setShowModal(true)} />
-
-                    {taskData.data.length > 0 ? < TaskList setShowModal={setShowModal} handelAddEditTask={handelAddEditTask} /> : <NoTasksFound />}
-
+                    )}
                 </div>
+                {!showModal && <>
+                    <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
+                        <TaskAction onOpen={() => setShowModal(true)} />
+                        {
+                            taskData.data.length > 0 ? <TaskList setShowModal={setShowModal} handelAddEditTask={handelAddEditTask} /> : <NoTasksFound />
+                        }
+                    </div>
+                </>}
             </div>
         </section>
     );

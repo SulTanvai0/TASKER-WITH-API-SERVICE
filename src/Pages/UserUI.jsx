@@ -1,9 +1,10 @@
 import { useContext, useEffect } from "react";
 import { taskDataContext } from "../context";
 
-/* eslint-disable react/prop-types */
+
 const UserUI = () => {
     const { taskData, setTaskData } = useContext(taskDataContext);
+
 
     function handelShowFrom(value) {
         setTaskData((prevTaskData) => ({
@@ -21,7 +22,6 @@ const UserUI = () => {
             setTaskData((prevTaskData) => ({
                 ...prevTaskData,
                 userInfo: userInfo,
-                refresh: prevTaskData.refresh + 1
             }));
         }
 

@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
-import { taskDataContext } from "../context";
+import { pageRefreshContext, taskDataContext } from "../context";
 import postRequest from "../utils/postRequest";
 
 const SearchBox = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const { taskData, setTaskData } = useContext(taskDataContext);
+    const { refresh, setRefresh } = useContext(pageRefreshContext);
     const { userId } = taskData.userInfo;
 
     const doSearch = async (term) => {
@@ -17,7 +18,7 @@ const SearchBox = () => {
         try {
             let res = await postRequest(url, postObj);
 
-            if (res.data.data.length > 0) {
+            if (res.data.data) {
                 let newData = res.data.data;
                 setTaskData((prevTaskData) => ({
                     ...prevTaskData,
@@ -30,13 +31,16 @@ const SearchBox = () => {
         }
     }
 
-
+    function HandelBackToHome(e) {
+        e.preventDefault();
+        setRefresh(refresh + 1)
+    }
 
 
     return (
         <form>
             <div className="flex">
-                <div className="relative overflow-hidden rounded-lg text-gray-50 md:min-w-[380px] lg:min-w-[440px]">
+                <div className="relative overflow-hidden rounded-lg text-gray-50 md:min-w-[380px] lg:min-w-[440px] ">
                     <input
                         type="search"
                         id="search-dropdown"
@@ -58,6 +62,9 @@ const SearchBox = () => {
                         </svg>
                         <span className="sr-only">Search</span>
                     </button>
+                </div>
+                <div>
+                    {searchTerm && <button className="rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold mx-1.5" onClick={HandelBackToHome}>backToHome</button>}
                 </div>
             </div>
         </form>

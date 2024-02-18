@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import toast from 'react-hot-toast';
 import { pageRefreshContext, taskDataContext } from "../context";
 import postRequest from "../utils/postRequest";
 import SearchBox from "./SearchBox";
@@ -23,6 +24,7 @@ const TaskAction = ({ onOpen }) => {
 
                 if (response.data.status === "success") {
                     setRefresh(refresh + 1)
+                    toast.success(`All tasks removed from task list`)
 
                 } else {
                     console.error("Failed to delete tasks:", response.data.status);

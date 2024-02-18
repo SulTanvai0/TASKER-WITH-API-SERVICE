@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react";
+import toast from 'react-hot-toast';
 import { FaStar } from "react-icons/fa";
 import { pageRefreshContext } from "../context";
 import postRequest from "../utils/postRequest";
@@ -40,8 +41,8 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
             const response = await postRequest(url, deleteIfo);
 
             if (response.data.status === "success") {
-
                 setRefresh(refresh + 1)
+                toast.success(`${title} remove from task list`);
 
             }
         }
@@ -58,6 +59,8 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
 
         if (response.data.status === "success") {
             setRefresh(refresh + 1);
+
+            toast.success(`${title} ${isFavourite ? "remove from favorite" : "add to favorite"}`);
         }
 
     }
