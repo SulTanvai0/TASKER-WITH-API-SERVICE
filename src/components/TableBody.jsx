@@ -38,9 +38,11 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
 
             const response = await postRequest(url, deleteIfo);
 
-            if (response.statusText === "OK") {
+            if (response.data.status === "success") {
+
                 setTaskData((prevTaskData) => ({
                     ...prevTaskData,
+                    data: prevTaskData.data,
                     refresh: prevTaskData.refresh + 1
                 }));
             }
@@ -111,7 +113,7 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
                             onClick={() => handelDelete(_id)}
                         >Delete</button>
                         <button className="text-blue-500"
-                            onClick={() => { setShowModal(true); handelAddEditTask(data, false, false) }}
+                            onClick={() => { setShowModal(true); handelAddEditTask(data, false) }}
                         >Edit</button>
                     </div>
                 </td>

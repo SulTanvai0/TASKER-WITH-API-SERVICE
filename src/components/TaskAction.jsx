@@ -11,24 +11,29 @@ const TaskAction = ({ onOpen }) => {
 
 
     const handelDeleteAll = async () => {
+        const confirmed = window.confirm("Are you sure about deleting all tasks");
 
-        const confirm = window.confirm("Are sure about deleting All Tasks");
+        if (confirmed) {
+            const url = `https://tasker-api-cojx.onrender.com/tasker_api/v1/deleteAll_task`;
+            const requestData = { postUserId: userId };
 
-        if (confirm) {
+            try {
+                const response = await postRequest(url, requestData);
 
-            const url = ` https://tasker-api-cojx.onrender.com/tasker_api/v1/deleteAll_task`
-            let ID = { postUserId: userId };
-
-            const response = await postRequest(url, ID);
-
-            if (response.statusText === "OK") {
-                setTaskData((prevTaskData) => ({
-                    ...prevTaskData,
-                    refresh: prevTaskData.refresh + 1
-                }));
+                if (response.data.status === "success") {
+                    setTaskData((prevTaskData) => ({
+                        ...prevTaskData,
+                        data: [],
+                        refresh: prevTaskData.refresh + 1
+                    }));
+                } else {
+                    console.error("Failed to delete tasks:", response.data.status);
+                }
+            } catch (error) {
+                console.error("Error deleting tasks:", error.message);
             }
         }
-    }
+    };
 
 
     return (
@@ -40,8 +45,13 @@ const TaskAction = ({ onOpen }) => {
                 <button className="rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold"
                     onClick={onOpen}
                 >Add Task</button>
-                <button className="rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold"
-                    onClick={handelDeleteAll}>Delete All</button>
+                <button
+                    className={`rounded-md ${taskData.data.length > 0 ? 'bg-red-500' : 'bg-gray-300'} px-3.5 py-2.5 text-sm font-semibold`}
+                    onClick={handelDeleteAll}
+                    disabled={taskData.data.length === 0}
+                >
+                    Delete All
+                </button>
             </div>
         </div>
     );

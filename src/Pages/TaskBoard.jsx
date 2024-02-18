@@ -11,9 +11,11 @@ const TaskBoard = () => {
     const { taskData, setTaskData } = useContext(taskDataContext);
     const [showModal, setShowModal] = useState(false)
     const [editTask, setEditTask] = useState(null);
+
+
     const { userId } = taskData.userInfo;
 
-    const handelAddEditTask = (task, isAdd, apiReq) => {
+    const handelAddEditTask = (task, isAdd) => {
         if (isAdd) {
             const handelCreate = async () => {
 
@@ -89,8 +91,10 @@ const TaskBoard = () => {
 
             fetchData(userID, url);
         }
+
     }, [setTaskData, taskData.api, taskData.refresh, userId]);
 
+    console.log(taskData.refresh, ":", taskData.data);
 
     return (
         <section className="mb-20">
