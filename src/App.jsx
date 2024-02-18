@@ -1,12 +1,15 @@
 import Page from "./Pages";
+import PageRefreshProvider from "./provider/PageRefreshProvider";
 import TaskDataProvider from "./provider/TaskDataProvider";
 
 const App = () => {
   return (
     <>
-      <TaskDataProvider>
-        <Page />
-      </TaskDataProvider>
+      <PageRefreshProvider>
+        <TaskDataProvider>
+          <Page />
+        </TaskDataProvider>
+      </PageRefreshProvider>
     </>
   );
 };

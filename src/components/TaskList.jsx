@@ -9,6 +9,7 @@ const TaskList = ({ setShowModal, handelAddEditTask }) => {
 
     return (
         <div className="overflow-auto">
+
             <table className="table-fixed overflow-auto xl:w-full">
                 <thead>
                     <tr>

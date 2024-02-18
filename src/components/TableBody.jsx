@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react";
 import { FaStar } from "react-icons/fa";
-import { taskDataContext } from "../context";
+import { pageRefreshContext } from "../context";
 import postRequest from "../utils/postRequest";
 
 
@@ -25,7 +25,8 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
         '#10FBEDB2',
     ];
 
-    const { setTaskData } = useContext(taskDataContext);
+    const { refresh, setRefresh } = useContext(pageRefreshContext)
+
 
 
     const handelDelete = async (ID) => {
@@ -40,11 +41,8 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
 
             if (response.data.status === "success") {
 
-                setTaskData((prevTaskData) => ({
-                    ...prevTaskData,
-                    data: prevTaskData.data,
-                    refresh: prevTaskData.refresh + 1
-                }));
+                setRefresh(refresh + 1)
+
             }
         }
 
@@ -54,35 +52,24 @@ const TableBody = ({ data, setShowModal, handelAddEditTask }) => {
 
         const url = ` https://tasker-api-cojx.onrender.com/tasker_api/v1/update_task`
 
-
         let newTask = { ...data, isFavourite: Favorite };
-
 
         const response = await postRequest(url, newTask);
 
-        if (response.statusText === "OK") {
-            setTaskData((prevTaskData) => ({
-                ...prevTaskData,
-                refresh: prevTaskData.refresh + 1
-            }));
+        if (response.data.status === "success") {
+            setRefresh(refresh + 1);
         }
 
     }
 
-
-
-
-
     return (
         <>
-
-            <tr className="border-b border-[#2E3443] [&>td]:align-baseline [&>td]:px-4 [&>td]:py-2">
+            <tr className="border-b border-[#2E3443] [&>td]:align-baseline [&>td]:px-4 [&>td]:py-2 hover:bg-[#41434a]">
                 <td>
-                    <button onClick={() => handelFavorite(!isFavourite)} >
-                        {
-                            isFavourite ? <FaStar color="yellow" /> : <FaStar />
-                        }
+                    <button onClick={() => handelFavorite(!isFavourite)} className="bg-transparent p-0.5  hover:border hover:border-[#2E3443] rounded">
+                        {isFavourite ? <FaStar className="text-yellow-500" /> : <FaStar />}
                     </button>
+
                 </td>
                 <td>{title}</td>
                 <td>

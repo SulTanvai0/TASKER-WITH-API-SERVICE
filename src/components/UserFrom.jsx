@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import svg from "../assets/submit.svg";
-import { taskDataContext } from "../context";
+import { pageRefreshContext, taskDataContext } from "../context";
 
 const UserForm = () => {
     const { setTaskData } = useContext(taskDataContext);
+    const { refresh, setRefresh } = useContext(pageRefreshContext);
 
     const [userInfo, setUserInfo] = useState({ email: "", firstName: "", lastName: "" });
-
+    const [userError, setUserError] = useState("")
     function handleUserInfo(e) {
         let name = e.target.name
         let value = e.target.value
@@ -39,15 +40,19 @@ const UserForm = () => {
                     setTaskData((prevTaskData) => ({
                         ...prevTaskData,
                         userInfo: userInfo,
-                        refresh: prevTaskData.refresh + 1,
                         showUserModal: !prevTaskData.showUserModal
+                    }));
+
+                    setRefresh((prevRefresh) => ({
+                        ...prevRefresh,
+                        refresh: refresh + 1
                     }));
 
 
                     localStorage.setItem("userInfo", JSON.stringify(userInfo));
                 }
             } catch (error) {
-                console.error("Error creating user:", error);
+                setUserError(error.response.data.message);
             }
         }
     }
@@ -60,6 +65,7 @@ const UserForm = () => {
                 <div className="container lg:px-20 rounded-xl border border-[rgba(206,206,206,0.12)] px-6 py-8 md:px-9 md:py-16 bg-[#18244315]">
                     <form className="px-5">
                         <div className="mb-4 relative">
+                            {/* <label htmlFor="title">Email</label> */}
                             <input
                                 type="email"
                                 name="email"
@@ -68,9 +74,11 @@ const UserForm = () => {
                                 required
                                 onChange={(e) => handleUserInfo(e)}
                             />
+                            {userError && <p className="text-red-600"> <small>Email already used</small></p>}
                         </div>
 
                         <div className="mb-4">
+                            {/* <label htmlFor="title">First Name</label> */}
                             <input
                                 type="text"
                                 name="firstName"
@@ -81,7 +89,8 @@ const UserForm = () => {
                             />
                         </div>
 
-                        <div className="mb-4">
+                        <div className=" mb-4">
+                            {/* <label htmlFor="title">Last Name</label> */}
                             <input
                                 type="text"
                                 name="lastName"

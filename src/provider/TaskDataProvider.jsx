@@ -8,7 +8,6 @@ const TaskDataProvider = ({ children }) => {
         api: "https://tasker-api-cojx.onrender.com/tasker_api/v1/getTasks",
         data: [],
         userInfo: {},
-        refresh: 1,
         showUserModal: false
     });
 

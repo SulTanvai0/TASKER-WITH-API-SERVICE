@@ -4,21 +4,24 @@ import postRequest from "../utils/postRequest";
 
 const SearchBox = () => {
     const [searchTerm, setSearchTerm] = useState("");
-    const { setTaskData } = useContext(taskDataContext);
+    const { taskData, setTaskData } = useContext(taskDataContext);
+    const { userId } = taskData.userInfo;
 
     const doSearch = async (term) => {
         let url = `https://tasker-api-cojx.onrender.com/tasker_api/v1/searchByKeyWord_task`;
-        const postUserId = "65cc577cca49be7fcfa3fe33"
+        const postUserId = userId;
+
         const keyWord = term;
         let postObj = { postUserId, keyWord };
 
         try {
             let res = await postRequest(url, postObj);
+
             if (res.data.data.length > 0) {
                 let newData = res.data.data;
                 setTaskData((prevTaskData) => ({
                     ...prevTaskData,
-                    data: newData,
+                    data: [...newData],
                 }));
             }
 

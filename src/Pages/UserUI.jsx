@@ -35,14 +35,14 @@ const UserUI = () => {
         <>
 
             {fullName && <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-md hover:bg-gradient-to-l font-extrabold p-2 mx-3 whitespace-nowrap">
-                {fullName ? fullName : "User Name"}
+                {fullName}
             </div>}
+
             {
                 !fullName && <button className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-md hover:bg-gradient-to-l font-bold p-2 mx-3 whitespace-nowrap"
                     onClick={() => handelShowFrom(!taskData.showUserModal)}
                 >
-                    Subscribe to tasker
-
+                    Subscribe To Tasker
                 </button>
             }
 

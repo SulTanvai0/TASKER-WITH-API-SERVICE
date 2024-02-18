@@ -3,20 +3,23 @@ import NoTasksFound from "../components/NoTasksFound";
 import TaskAction from "../components/TaskAction";
 import TaskList from "../components/TaskList";
 import TaskModel from "../components/TaskModel";
-import { taskDataContext } from "../context";
+import { pageRefreshContext, taskDataContext } from "../context";
 import postRequest from "../utils/postRequest";
 
 const TaskBoard = () => {
 
     const { taskData, setTaskData } = useContext(taskDataContext);
-    const [showModal, setShowModal] = useState(false)
+    const { refresh, setRefresh } = useContext(pageRefreshContext);
+    const [showModal, setShowModal] = useState(false);
     const [editTask, setEditTask] = useState(null);
-
 
     const { userId } = taskData.userInfo;
 
     const handelAddEditTask = (task, isAdd) => {
+
+
         if (isAdd) {
+
             const handelCreate = async () => {
 
                 const url = ` https://tasker-api-cojx.onrender.com/tasker_api/v1/create_task`
@@ -27,12 +30,7 @@ const TaskBoard = () => {
                 const response = await postRequest(url, newTask);
 
                 if (response.data.status == "success") {
-
-
-                    setTaskData((prevTaskData) => ({
-                        ...prevTaskData,
-                        refresh: prevTaskData.refresh + 1
-                    }));
+                    setRefresh(refresh + 1)
                 }
             }
             handelCreate()
@@ -52,13 +50,9 @@ const TaskBoard = () => {
 
                 const response = await postRequest(url, newTask);
 
+                if (response.data.status == "success") {
 
-                if (response.statusText === "OK") {
-                    console.log(response);
-                    setTaskData((prevTaskData) => ({
-                        ...prevTaskData,
-                        refresh: prevTaskData.refresh + 1
-                    }));
+                    setRefresh(refresh + 1)
                 }
             }
             handelUpdate();
@@ -68,33 +62,34 @@ const TaskBoard = () => {
 
 
     useEffect(() => {
-        let userID = { postUserId: userId }
+        const fetchData = async (ID, url) => {
+            try {
+
+                const response = await postRequest(url, ID);
+
+                const newData = response?.data?.data;
+
+                if (newData) {
+                    setTaskData((prevTaskData) => ({
+                        ...prevTaskData,
+                        data: [...newData],
+                    }));
+                }
+            } catch (error) {
+                console.error('Error fetching task data:', error);
+            }
+        };
+
+        let userID = { postUserId: userId };
         let url = taskData.api;
 
         if (userID) {
-            const fetchData = async (ID, url) => {
-                try {
-                    const response = await postRequest(url, ID);
-                    const newData = response?.data?.data;
-
-
-                    if (newData.length > 0) {
-                        setTaskData((prevTaskData) => ({
-                            ...prevTaskData,
-                            data: [...newData],
-                        }));
-                    }
-                } catch (error) {
-                    console.error('Error fetching task data:', error);
-                }
-            };
-
             fetchData(userID, url);
         }
 
-    }, [setTaskData, taskData.api, taskData.refresh, userId]);
 
-    console.log(taskData.refresh, ":", taskData.data);
+    }, [setTaskData, taskData.api, userId, refresh]);
+
 
     return (
         <section className="mb-20">
