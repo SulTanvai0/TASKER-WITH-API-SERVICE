@@ -17,5 +17,5 @@
 }
 
 .animate-slideLeft {
-  animation: slideLeft 10s ease-in infinite;
+  animation: slideLeft 5s linear infinite;
 }
